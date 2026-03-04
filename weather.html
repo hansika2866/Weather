@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Weather Dashboard</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #1e3a8a; /* simplified solid background */
+    color: white;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    padding: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+/* Card Container */
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+
+/* Weather Card */
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    padding: 20px;
+    width: 200px; /* slightly smaller to fit more cards */
+    border-radius: 15px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.card img {
+    width: 70px;
+}
+
+.city {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.temp {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.info {
+    font-size: 14px;
+    opacity: 0.8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">🌤 Weather Dashboard - Indian Capitals</div>
+<div class="container" id="container"></div>
+
+<script>
+const apiKey = "600f0ff24a04436288692019260403"
+
+// All Indian state and UT capitals
+const cities = [
+    "Amaravati","Itanagar","Dispur","Patna","Raipur","Panaji","Gandhinagar",
+    "Chandigarh","Shimla","Ranchi","Bangalore","Thiruvananthapuram","Bhopal",
+    "Mumbai","Imphal","Shillong","Aizawl","Kohima","Bhubaneswar","Chandigarh",
+    "Jaipur","Gangtok","Chennai","Hyderabad","Agartala","Lucknow","Dehradun",
+    "Kolkata","Port Blair","Daman","New Delhi","Srinagar","Leh","Kavaratti",
+    "Puducherry"
+];
+
+const container = document.getElementById("container")
+
+cities.forEach(city => {
+    fetch("https://api.weatherapi.com/v1/current.json?key=" + apiKey + "&q=" + city)
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) return
+
+            const card = document.createElement("div")
+            card.classList.add("card")
+
+            card.innerHTML = `
+                <div class="city">${data.location.name}</div>
+                <img src="https:${data.current.condition.icon}">
+                <div class="temp">${data.current.temp_c}°C</div>
+                <div class="info">Humidity: ${data.current.humidity}%</div>
+                <div class="info">Wind: ${data.current.wind_kph} km/h</div>
+            `
+
+            container.appendChild(card)
+        })
+})
+</script>
+
+</body>
+</html>
